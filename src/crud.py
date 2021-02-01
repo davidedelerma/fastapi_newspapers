@@ -1,4 +1,4 @@
-from src.models import newspaper as ns
+from src.orm import newspaper as ns
 from sqlalchemy.orm.session import Session
 
 
