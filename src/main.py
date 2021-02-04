@@ -1,11 +1,12 @@
+import uvicorn
+
+from src.crud import get_newspapers
+from src.models.newspaper import NewsPaper
 from src.orm.database import SessionLocal, engine, Base
 from typing import List
 
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
-
-from . import crud
-from .models import newspaper as ns_model
 
 Base.metadata.create_all(bind=engine)
 
@@ -21,7 +22,11 @@ def get_db():
         db.close()
 
 
-@app.get("/newspapers/", response_model=List[ns_model.NewsPaper])
+@app.get("/newspapers/", response_model=List[NewsPaper])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    newspapers = crud.get_newspapers(db, skip=skip, limit=limit)
+    newspapers = get_newspapers(db, skip=skip, limit=limit)
     return newspapers
+
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", host='0.0.0.0', port=8000, reload=True)
