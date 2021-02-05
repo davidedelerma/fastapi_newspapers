@@ -4,12 +4,13 @@ import uvicorn
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from src.auth import authenticate_user, create_access_token, get_current_active_user
+from src import crud
+from src.auth import authenticate_user, create_access_token, get_current_active_user, current_user_is_superuser
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from src.crud import get_newspapers
 from src.dependency import get_db
 from src.models.newspaper import NewsPaper
-from src.models.user import Token, User
+from src.models.user import Token, User, UserCreate
 from src.orm.database import engine, Base
 from typing import List
 
@@ -39,6 +40,17 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.post("/users/", response_model=User)
+def create_user(user: UserCreate,
+                db: Session = Depends(get_db),
+                is_superuser: bool = Depends(current_user_is_superuser)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db=db, user=user)
+
 
 
 @app.get("/users/me/", response_model=User)

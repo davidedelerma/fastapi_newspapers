@@ -4,7 +4,7 @@ from src.models.user import UserCreate
 from sqlalchemy.orm.session import Session
 
 from src.orm import newspaper as ns
-from src.orm import user as us
+from src.orm import user as orm_user
 
 
 def get_newspaper(db: Session, newspaper_id: int):
@@ -20,7 +20,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_user(db: Session, user: UserCreate):
     hashed_pass = pwd_context.hash(user.password)
-    db_user = us.User(
+    db_user = orm_user.User(
         email=user.email,
         user_name=user.user_name,
         first_name=user.first_name,
@@ -31,3 +31,7 @@ def create_user(db: Session, user: UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(orm_user.User).filter(orm_user.User.email == email).first()
