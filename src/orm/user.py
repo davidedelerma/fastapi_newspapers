@@ -1,5 +1,4 @@
-from sqlalchemy import Column, String, Boolean, Integer, UniqueConstraint
-from sqlalchemy.sql.sqltypes import DateTime
+from sqlalchemy import Column, String, Boolean, Integer, UniqueConstraint, DateTime
 from .database import Base
 
 

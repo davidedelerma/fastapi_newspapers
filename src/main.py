@@ -7,32 +7,26 @@ from starlette import status
 from src.auth import authenticate_user, create_access_token, get_current_active_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from src.crud import get_newspapers
+from src.dependency import get_db
 from src.models.newspaper import NewsPaper
-from src.models.user import User, Token
-from src.orm.database import SessionLocal, engine, Base
+from src.models.user import Token, User
+from src.orm.database import engine, Base
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
+
+from src.orm import user as orm_user
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),
                                  db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
+    user = await authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -48,7 +42,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @app.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
+async def read_users_me(current_user: orm_user.User = Depends(get_current_active_user)):
     return current_user
 
 

@@ -7,3 +7,5 @@ passlib==1.7.4
 pip~=21.0.1
 setuptools~=53.0.0
 python-jose==3.2.0
+python-multipart==0.0.5
+bcrypt==3.2.0
