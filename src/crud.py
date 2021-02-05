@@ -15,14 +15,6 @@ def get_newspapers(db: Session, skip: int = 0, limit: int = 100):
     return db.query(ns.NewsPaper).offset(skip).limit(limit).all()
 
 
-def get_user(db: Session, user_id: int):
-    return db.query(us.User).filter(us.User.id == user_id).first()
-
-
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(us.User).offset(skip).limit(limit).all()
-
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 

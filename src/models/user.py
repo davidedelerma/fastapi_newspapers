@@ -8,6 +8,8 @@ class UserBase(BaseModel):
     user_name: str
     first_name: str
     last_name: str
+    is_active: bool = True
+    is_superuser: bool = False
 
 
 class UserCreate(UserBase):
@@ -16,9 +18,16 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    is_active: bool
-    is_superuser: bool
     last_login: Optional[datetime]
 
     class Config:
         orm_mode = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None

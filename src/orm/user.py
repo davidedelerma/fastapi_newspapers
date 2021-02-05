@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy import Column, String, Boolean, Integer, UniqueConstraint
 from sqlalchemy.sql.sqltypes import DateTime
 from .database import Base
 
@@ -15,3 +15,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
     last_login = Column(DateTime)
+    __table_args__ = (
+        UniqueConstraint("user_name", "password", name="_user_name_password_uc"),
+    )
+
