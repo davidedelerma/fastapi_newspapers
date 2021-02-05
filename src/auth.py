@@ -29,6 +29,14 @@ async def get_user_by_username(db: Session, username: str) -> Optional[User]:
     return db.query(User).filter(User.user_name == username).first()
 
 
+async def update_user_login_time(db: Session,
+                                 user: User,
+                                 time: datetime):
+    user.last_login = time
+    db.commit()
+    return
+
+
 async def authenticate_user(db: Session, username: str,
                             password: str) -> Union[bool, User]:
     user = await get_user_by_username(db, username)
@@ -36,6 +44,7 @@ async def authenticate_user(db: Session, username: str,
         return False
     if not verify_password(password, user.password):
         return False
+    await update_user_login_time(db, user, datetime.utcnow())
     return user
 
 
