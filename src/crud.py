@@ -1,5 +1,6 @@
 from passlib.context import CryptContext
 
+from src.auth import pwd_context
 from src.models.user import UserCreate
 from sqlalchemy.orm.session import Session
 
@@ -13,9 +14,6 @@ def get_newspaper(db: Session, newspaper_id: int):
 
 def get_newspapers(db: Session, skip: int = 0, limit: int = 100):
     return db.query(ns.NewsPaper).offset(skip).limit(limit).all()
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def create_user(db: Session, user: UserCreate):

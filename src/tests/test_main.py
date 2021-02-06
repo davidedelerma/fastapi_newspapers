@@ -1,11 +1,15 @@
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
 from sqlalchemy.pool import StaticPool
+from httpx import AsyncClient
 
+from src.auth import pwd_context
 from src.dependency import get_db
 from src.main import app
 from src.orm.database import Base
+from src.orm.user import User
 
 SQLALCHEMY_DATABASE_URL = 'sqlite:///:memory:'
 
@@ -36,4 +40,27 @@ def test_get_newspapers():
         "/newspapers/",
         json={},
     )
+    assert response.status_code == 200
+
+
+db_user = User(
+    email="test@test.com",
+    user_name="test_username",
+    first_name="test",
+    last_name="test",
+    password=pwd_context.hash('test'),
+    is_superuser=True,
+)
+
+
+@pytest.mark.asyncio
+async def test_root():
+    db = TestingSessionLocal()
+    db.add(db_user)
+    db.commit()
+    async with AsyncClient(app=app, base_url="http://testserver") as ac:
+        response = await ac.post("/token/",
+                                 data={"username": "test_username",
+                                       "password": "test"},
+                                 headers={"content-type": "application/x-www-form-urlencoded"})
     assert response.status_code == 200
