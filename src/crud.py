@@ -1,9 +1,7 @@
-from passlib.context import CryptContext
+from sqlalchemy.orm.session import Session
 
 from src.auth import pwd_context
 from src.models.user import UserCreate
-from sqlalchemy.orm.session import Session
-
 from src.orm import newspaper as ns
 from src.orm import user as orm_user
 

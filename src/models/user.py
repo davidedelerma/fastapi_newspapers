@@ -1,8 +1,10 @@
 import re
-
-from pydantic import BaseModel, EmailStr, validator
 from datetime import datetime
 from typing import Optional
+
+from pydantic import BaseModel
+from pydantic import EmailStr
+from pydantic import validator
 
 
 class UserBase(BaseModel):
@@ -20,11 +22,16 @@ class UserCreate(UserBase):
     @validator('password')
     def password_validation(cls, v):
         """
-        password must contain minimum six characters, at least one letter, one number and one special character
+        password must contain minimum six characters, at least one letter,
+        one number and one special character
         """
-        if not re.fullmatch(r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$", v):
-            raise ValueError('passwords must contain minimum six characters, '
-                             'at least one letter, one number and one special character ')
+        if not re.fullmatch(
+                r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$', v,
+        ):
+            raise ValueError(
+                'passwords must contain minimum six characters, '
+                'at least one letter, one number and one special character ',
+            )
         return v
 
 
