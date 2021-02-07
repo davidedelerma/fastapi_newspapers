@@ -11,17 +11,15 @@ from src.main import app
 from src.orm.database import Base
 from src.orm.user import User
 
-SQLALCHEMY_DATABASE_URL = 'sqlite:///:memory:'
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={'check_same_thread': False},
+    connect_args={"check_same_thread": False},
     poolclass=StaticPool,
 )
 
-TestingSessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine,
-)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
 
@@ -40,19 +38,16 @@ client = TestClient(app)
 
 
 def test_get_newspapers():
-    response = client.get(
-        '/newspapers/',
-        json={},
-    )
+    response = client.get("/newspapers/", json={})
     assert response.status_code == 200
 
 
 db_user = User(
-    email='test@test.com',
-    user_name='test_username',
-    first_name='test',
-    last_name='test',
-    password=pwd_context.hash('test'),
+    email="test@test.com",
+    user_name="test_username",
+    first_name="test",
+    last_name="test",
+    password=pwd_context.hash("test"),
     is_superuser=True,
 )
 
@@ -62,13 +57,10 @@ async def test_root():
     db = TestingSessionLocal()
     db.add(db_user)
     db.commit()
-    async with AsyncClient(app=app, base_url='http://testserver') as ac:
+    async with AsyncClient(app=app, base_url="http://testserver") as ac:
         response = await ac.post(
-            '/token/',
-            data={
-                'username': 'test_username',
-                'password': 'test',
-            },
-            headers={'content-type': 'application/x-www-form-urlencoded'},
+            "/token/",
+            data={"username": "test_username", "password": "test"},
+            headers={"content-type": "application/x-www-form-urlencoded"},
         )
     assert response.status_code == 200

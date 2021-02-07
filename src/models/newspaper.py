@@ -5,8 +5,8 @@ from pydantic import Field
 
 
 class Orientation(str, Enum):
-    left = 'left'
-    right = 'right'
+    left = "left"
+    right = "right"
 
 
 class NewsPaperBase(BaseModel):
@@ -14,7 +14,7 @@ class NewsPaperBase(BaseModel):
     year_of_fundation: int
     nationality: str
     director: str
-    political_orientation: Orientation = Field(None, alias='Orientation')
+    political_orientation: Orientation = Field(None, alias="Orientation")
 
 
 class NewsPaperCreate(NewsPaperBase):

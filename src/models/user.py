@@ -19,18 +19,18 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
-    @validator('password')
+    @validator("password")
     def password_validation(cls, v):
         """
         password must contain minimum six characters, at least one letter,
         one number and one special character
         """
         if not re.fullmatch(
-                r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$', v,
+            r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$", v,
         ):
             raise ValueError(
-                'passwords must contain minimum six characters, '
-                'at least one letter, one number and one special character ',
+                "passwords must contain minimum six characters, "
+                "at least one letter, one number and one special character ",
             )
         return v
 
