@@ -18,8 +18,7 @@ To autogenerate migration files:
 `alembic revision --autogenerate -m "init"`
 
 To add superuser to db use management script:
-Then run
 `python src/management_scripts/db_management.py ddv@da.com dav dav dav dav`
 
 To run uvicorn server with the application:
-Then run: `python ./src/main.py`
+`python ./src/main.py`
