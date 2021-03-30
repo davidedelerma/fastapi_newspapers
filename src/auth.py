@@ -101,7 +101,7 @@ async def get_current_active_user(
 async def current_user_is_superuser(
     current_user: User = Depends(get_current_user),
 ) -> bool:
-    if current_user.is_active is False:
+    if current_user.is_superuser is False:
         raise HTTPException(
             status_code=403, detail=f"User {current_user.user_name} is not SuperUser",
         )
