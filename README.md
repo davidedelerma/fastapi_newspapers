@@ -21,4 +21,7 @@ To add superuser to db use management script:
 `python src/management_scripts/db_management.py ddv@da.com dav dav dav dav`
 
 To run uvicorn server with the application:
-`python ./src/main.py`
+`python ./src/main.py`  
+
+To see swagger doc in dev after starting the service:
+`http://localhost:8000/docs`
